@@ -1,0 +1,269 @@
+Cmp-Mod V01 Genere par PcbNew le vie 16 sep 2011 20:36:42 ART
+
+BeginCmp
+TimeStamp = /4E49A104;
+Reference = C1;
+ValeurCmp = 100n;
+IdModule  = C1;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E49A10A;
+Reference = C2;
+ValeurCmp = 22p;
+IdModule  = C1;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E49A0FC;
+Reference = C3;
+ValeurCmp = 22p;
+IdModule  = C1;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E49A65F;
+Reference = C4;
+ValeurCmp = 4u7;
+IdModule  = C1V5;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E57DA9A;
+Reference = C5;
+ValeurCmp = 4.7u;
+IdModule  = C1V5;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E57E3E6;
+Reference = C6;
+ValeurCmp = 4.7u;
+IdModule  = C1V5;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E49A5ED;
+Reference = D1;
+ValeurCmp = 3.6V;
+IdModule  = R5;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E49A5C2;
+Reference = D2;
+ValeurCmp = 3.6V;
+IdModule  = R5;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E4AD232;
+Reference = D3;
+ValeurCmp = LED_AZUL;
+IdModule  = LED-3MM;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E49A0DC;
+Reference = IC1;
+ValeurCmp = ATMEGA88-P;
+IdModule  = DIP-28__300;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E49A3BC;
+Reference = J1;
+ValeurCmp = USB_1;
+IdModule  = USB_B;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E581209;
+Reference = JP1;
+ValeurCmp = JUMPER;
+IdModule  = PIN_ARRAY_2X1;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E57F9ED;
+Reference = K1;
+ValeurCmp = CONN_3;
+IdModule  = PIN_ARRAY_3X1;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E57DB02;
+Reference = K3;
+ValeurCmp = CONN_3;
+IdModule  = PIN_ARRAY_3X1;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E57E3E5;
+Reference = K4;
+ValeurCmp = CONN_3;
+IdModule  = PIN_ARRAY_3X1;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E49A9F4;
+Reference = P1;
+ValeurCmp = CONN_3X2;
+IdModule  = pin_array_3x2;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E57F6DE;
+Reference = P2;
+ValeurCmp = CONN_3X2;
+IdModule  = pin_array_3x2;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E4ACB85;
+Reference = Q1;
+ValeurCmp = NPN;
+IdModule  = TO92;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E57F458;
+Reference = Q2;
+ValeurCmp = NPN;
+IdModule  = TO92;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E57F81F;
+Reference = Q3;
+ValeurCmp = NPN;
+IdModule  = TO92;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E49A408;
+Reference = R1;
+ValeurCmp = 68;
+IdModule  = R1;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E49A427;
+Reference = R2;
+ValeurCmp = 68;
+IdModule  = R1;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E49A526;
+Reference = R3;
+ValeurCmp = 1.5k;
+IdModule  = R1;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E4ACBAA;
+Reference = R4;
+ValeurCmp = 150;
+IdModule  = R1;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E4ACBBE;
+Reference = R5;
+ValeurCmp = 150;
+IdModule  = R1;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E4ACDA7;
+Reference = R6;
+ValeurCmp = 2.2k;
+IdModule  = R1;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E4AD2CF;
+Reference = R7;
+ValeurCmp = 220;
+IdModule  = R1;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E57DB43;
+Reference = R8;
+ValeurCmp = 100;
+IdModule  = R1;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E57DBAC;
+Reference = R9;
+ValeurCmp = 4.7k;
+IdModule  = R1;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E57E3E4;
+Reference = R10;
+ValeurCmp = 100;
+IdModule  = R1;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E57E3E3;
+Reference = R11;
+ValeurCmp = 4.7k;
+IdModule  = R1;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E57F491;
+Reference = R12;
+ValeurCmp = 220;
+IdModule  = R1;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E57F490;
+Reference = R13;
+ValeurCmp = 220;
+IdModule  = R3;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E57F457;
+Reference = R14;
+ValeurCmp = 2.2k;
+IdModule  = R3;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E57F96F;
+Reference = R15;
+ValeurCmp = 220;
+IdModule  = R1;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E57F970;
+Reference = R16;
+ValeurCmp = 220;
+IdModule  = R5;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E57F820;
+Reference = R17;
+ValeurCmp = 2.2k;
+IdModule  = R5;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E49A140;
+Reference = X1;
+ValeurCmp = 16MHz;
+IdModule  = HC-18UV;
+EndCmp
+
+EndListe

@@ -1,0 +1,372 @@
+# EESchema Netlist Version 1.1 created  vie 09 sep 2011 20:55:45 ART
+(
+ ( /4E49A104 C1 C1 100n
+  ( 1 GND )
+  ( 2 VCC )
+ )
+ ( /4E49A10A C1 C2 22p
+  ( 1 GND )
+  ( 2 N-000021 )
+ )
+ ( /4E49A0FC C1 C3 22p
+  ( 1 GND )
+  ( 2 N-000022 )
+ )
+ ( /4E49A65F C1V5 C4 4u7
+  ( 1 VCC )
+  ( 2 GND )
+ )
+ ( /4E57DA9A C1V5 C5 4.7u
+  ( 1 N-000006 )
+  ( 2 GND )
+ )
+ ( /4E57E3E6 C1V5 C6 4.7u
+  ( 1 N-000002 )
+  ( 2 GND )
+ )
+ ( /4E49A5ED R5 D1 3.6V
+  ( 1 GND )
+  ( 2 N-000043 )
+ )
+ ( /4E49A5C2 R5 D2 3.6V
+  ( 1 GND )
+  ( 2 N-000046 )
+ )
+ ( /4E4AD232 LED-3MM D3 LED_AZUL
+  ( 1 N-000034 )
+  ( 2 N-000004 )
+ )
+ ( /4E49A0DC DIP-28__300 IC1 ATMEGA88-P
+  ( 1 RESET )
+  ( 2 ? )
+  ( 3 ? )
+  ( 4 N-000018 )
+  ( 5 LEDS_VERDE )
+  ( 6 N-000036 )
+  ( 7 VCC )
+  ( 8 GND )
+  ( 9 N-000021 )
+  ( 10 N-000022 )
+  ( 11 38KHz )
+  ( 12 ? )
+  ( 13 N-000034 )
+  ( 14 ? )
+  ( 15 ? )
+  ( 16 ? )
+  ( 17 MOSI )
+  ( 18 MISO )
+  ( 19 SCK )
+  ( 20 VCC )
+  ( 21 ? )
+  ( 22 GND )
+  ( 23 ? )
+  ( 24 ? )
+  ( 25 ? )
+  ( 26 ? )
+  ( 27 SENSOR_2 )
+  ( 28 SENSOR_1 )
+ )
+ ( /4E49A3BC USB_B J1 USB_1
+  ( 1 VCC )
+  ( 2 N-000046 )
+  ( 3 N-000043 )
+  ( 4 GND )
+  ( 5 ? )
+  ( 6 ? )
+ )
+ ( /4E581209 PIN_ARRAY_2X1 JP1 JUMPER
+  ( 1 LEDS_ROJO )
+  ( 2 MOSI )
+ )
+ ( /4E57F9ED PIN_ARRAY_3X1 K1 CONN_3
+  ( 1 VCC )
+  ( 2 N-000012 )
+  ( 3 N-000008 )
+ )
+ ( /4E57DB02 PIN_ARRAY_3X1 K3 CONN_3
+  ( 1 N-000006 )
+  ( 2 GND )
+  ( 3 SENSOR_1 )
+ )
+ ( /4E57E3E5 PIN_ARRAY_3X1 K4 CONN_3
+  ( 1 N-000002 )
+  ( 2 GND )
+  ( 3 SENSOR_2 )
+ )
+ ( /4E49A9F4 pin_array_3x2 P1 CONN_3X2
+  ( 1 MISO )
+  ( 2 VCC )
+  ( 3 SCK )
+  ( 4 MOSI )
+  ( 5 RESET )
+  ( 6 GND )
+ )
+ ( /4E57F6DE pin_array_3x2 P2 CONN_3X2
+  ( 1 VCC )
+  ( 2 VCC )
+  ( 3 N-000042 )
+  ( 4 N-000007 )
+  ( 5 N-000014 )
+  ( 6 N-000013 )
+ )
+ ( /4E4ACB85 TO92 Q1 NPN
+  ( 1 GND )
+  ( 2 N-000041 )
+  ( 3 N-000040 )
+ )
+ ( /4E57F458 TO92 Q2 NPN
+  ( 1 GND )
+  ( 2 N-000011 )
+  ( 3 N-000010 )
+ )
+ ( /4E57F81F TO92 Q3 NPN
+  ( 1 GND )
+  ( 2 N-000017 )
+  ( 3 N-000015 )
+ )
+ ( /4E49A408 R1 R1 68
+  ( 1 N-000018 )
+  ( 2 N-000043 )
+ )
+ ( /4E49A427 R1 R2 68
+  ( 1 N-000036 )
+  ( 2 N-000046 )
+ )
+ ( /4E49A526 R1 R3 1.5k
+  ( 1 VCC )
+  ( 2 N-000046 )
+ )
+ ( /4E4ACBAA R5 R4 150
+  ( 1 N-000042 )
+  ( 2 N-000040 )
+ )
+ ( /4E4ACBBE R5 R5 150
+  ( 1 N-000014 )
+  ( 2 N-000040 )
+ )
+ ( /4E4ACDA7 R5 R6 2.2k
+  ( 1 N-000041 )
+  ( 2 38KHz )
+ )
+ ( /4E4AD2CF R1 R7 220
+  ( 1 GND )
+  ( 2 N-000004 )
+ )
+ ( /4E57DB43 R5 R8 100
+  ( 1 N-000006 )
+  ( 2 VCC )
+ )
+ ( /4E57DBAC R1 R9 4.7k
+  ( 1 SENSOR_1 )
+  ( 2 VCC )
+ )
+ ( /4E57E3E4 R1 R10 100
+  ( 1 N-000002 )
+  ( 2 VCC )
+ )
+ ( /4E57E3E3 R5 R11 4.7k
+  ( 1 SENSOR_2 )
+  ( 2 VCC )
+ )
+ ( /4E57F491 R5 R12 220
+  ( 1 N-000013 )
+  ( 2 N-000010 )
+ )
+ ( /4E57F490 R5 R13 220
+  ( 1 N-000012 )
+  ( 2 N-000010 )
+ )
+ ( /4E57F457 R5 R14 2.2k
+  ( 1 N-000011 )
+  ( 2 LEDS_ROJO )
+ )
+ ( /4E57F96F R5 R15 220
+  ( 1 N-000007 )
+  ( 2 N-000015 )
+ )
+ ( /4E57F970 R5 R16 220
+  ( 1 N-000008 )
+  ( 2 N-000015 )
+ )
+ ( /4E57F820 R5 R17 2.2k
+  ( 1 N-000017 )
+  ( 2 LEDS_VERDE )
+ )
+ ( /4E49A140 HC-18UV X1 16MHz
+  ( 1 N-000022 )
+  ( 2 N-000021 )
+ )
+)
+*
+{ Allowed footprints by component:
+$component C1
+ SM*
+ C?
+ C1-1
+$endlist
+$component C2
+ SM*
+ C?
+ C1-1
+$endlist
+$component C3
+ SM*
+ C?
+ C1-1
+$endlist
+$component C4
+ CP*
+ SM*
+$endlist
+$component C5
+ CP*
+ SM*
+$endlist
+$component C6
+ CP*
+ SM*
+$endlist
+$component D1
+ D?
+ SO*
+ SM*
+$endlist
+$component D2
+ D?
+ SO*
+ SM*
+$endlist
+$component D3
+ LED-3MM
+ LED-5MM
+ LED-10MM
+ LED-0603
+ LED-0805
+ LED-1206
+ LEDV
+$endlist
+$component IC1
+ 28DIP-ELL600
+ 28dip600
+$endlist
+$component R1
+ R?
+ SM0603
+ SM0805
+ R?-*
+ SM1206
+$endlist
+$component R2
+ R?
+ SM0603
+ SM0805
+ R?-*
+ SM1206
+$endlist
+$component R3
+ R?
+ SM0603
+ SM0805
+ R?-*
+ SM1206
+$endlist
+$component R4
+ R?
+ SM0603
+ SM0805
+ R?-*
+ SM1206
+$endlist
+$component R5
+ R?
+ SM0603
+ SM0805
+ R?-*
+ SM1206
+$endlist
+$component R6
+ R?
+ SM0603
+ SM0805
+ R?-*
+ SM1206
+$endlist
+$component R7
+ R?
+ SM0603
+ SM0805
+ R?-*
+ SM1206
+$endlist
+$component R8
+ R?
+ SM0603
+ SM0805
+ R?-*
+ SM1206
+$endlist
+$component R9
+ R?
+ SM0603
+ SM0805
+ R?-*
+ SM1206
+$endlist
+$component R10
+ R?
+ SM0603
+ SM0805
+ R?-*
+ SM1206
+$endlist
+$component R11
+ R?
+ SM0603
+ SM0805
+ R?-*
+ SM1206
+$endlist
+$component R12
+ R?
+ SM0603
+ SM0805
+ R?-*
+ SM1206
+$endlist
+$component R13
+ R?
+ SM0603
+ SM0805
+ R?-*
+ SM1206
+$endlist
+$component R14
+ R?
+ SM0603
+ SM0805
+ R?-*
+ SM1206
+$endlist
+$component R15
+ R?
+ SM0603
+ SM0805
+ R?-*
+ SM1206
+$endlist
+$component R16
+ R?
+ SM0603
+ SM0805
+ R?-*
+ SM1206
+$endlist
+$component R17
+ R?
+ SM0603
+ SM0805
+ R?-*
+ SM1206
+$endlist
+$endfootprintlist
+}
