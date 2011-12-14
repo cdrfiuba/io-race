@@ -28,6 +28,9 @@
 char *aux_name = IO_NAME;
 */
 
+uchar estado_leds_alter = 0;
+void ledAlternar(void);
+
 #define SEC_TO_REACTIVATE_BARRIER 3
 
 enum {
@@ -245,11 +248,26 @@ void usbFunctionWriteOut( uchar *data, uchar len )
         c = *data++;
 
         switch(c){
-           case 'X': //PORTD |= (1<<PD7);
-                      break;
+           case 'D': 
+                       PCICR |= (1<<PCIE1);
+                       PORTB &= ~(1<<PB3);
+                       PORTD |= (1<<PD3);
+                       break;
 
-           case 'x': //PORTD &= ~(1<<PD7);
-                      break;
+           case 'd':
+                       PCICR &= ~(1<<PCIE1);
+                       TCCR1B = (0<<WGM13) | (1<<WGM12) | (0<<CS12) | (0<<CS11) | (0<<CS10);
+                       PORTD &= ~(1<<PD3);
+                       PORTB |= (1<<PB3);
+                       break;
+
+           case 'T':
+                       estado_leds_alter = 1;
+                       break;
+
+           case 't':
+                       estado_leds_alter = 0;
+                       break;
 
            case '\n': break;
 
@@ -302,7 +320,7 @@ static uchar   intr_flag[4];
        PCICR &= ~(1<<PCIE1);   // Desactivo las interrupciones por cambio de estado de pin
        usbDisableAllRequests();  // Deshabilito las requests de las rutinas USB 
        _delay_ms(2);  // Delay de debounce por si hay ruido
-       if(PINC & 0x20){  // Verifico que el estado del pin despues del debounce
+       if((PINC & 0x20) || (PINC & 0x40)){  // Verifico que el estado del pin despues del debounce
           out_char('L');  // Si efectivamente salto la interrupcion, mando caracter 'L'
           TCNT1 = 0;  // Reinicio el contador del Timer1 antes de activarlo 
           TCCR1B = (0<<WGM13) | (1<<WGM12) | (1<<CS12) | (0<<CS11) | (1<<CS10);  // Activo el Timer1
@@ -396,23 +414,38 @@ uchar    i;
 
 #define TOP 52
 
+
    DDRD |= (1<<PD5);
    TCCR0A |= (0<<COM0A1) | (0<<COM0A0) | (1<<COM0B1) | (1<<COM0B0) | (1<<WGM01) | (1<<WGM00);
    TCCR0B |= (1<<WGM02) | (0<<CS02) | (1<<CS01) | (0<<CS00);
    OCR0A = TOP;
    OCR0B = TOP/2;
 
+   /* Inicializacion de los pines utilizados para los leds de colore rojo y verde */
+   DDRB |= (1<<PB3);  // Led's Rojo
+   DDRD |= (1<<PD3);  // Led's Verde
+
+
    /* Inicializacion de los pines de interrupcion de largada */  
-   DDRC |= (0<<PC5);
-   PCICR |= (1<<PCIE1);
-   PCMSK1 |= (1<<PCINT13);
+   DDRC |= (0<<PC5) | (0<<PC4);
+   //PCICR |= (1<<PCIE1);
+   PCMSK1 |= (1<<PCINT13) | (1<<PCINT12);
 
    /* Inicializacion de timer para delay de 3 segundos */
    TCCR1A |= (0<<COM1A1) | (0<<COM1A0) | (0<<COM1B1) | (0<<COM1B0) | (0<<WGM11) | (0<<WGM10);
    TCCR1B |= (0<<WGM13) | (1<<WGM12) | (0<<CS12) | (0<<CS11) | (0<<CS10);
    TIMSK1 |= (1<<OCIE1A);
-   OCR1A = 40000;//23437;
+   OCR1A = 40000; //23437;
 
+   PORTD &= ~(1<<PD3); // Apagado de la luz verde
+
+
+   /* Inicializacion del timer 2 */
+   /*
+   TCCR2A |= (0<<COM2A1) | (0<<COM2A0) | (0<<COM2B1) | (0<<COM2B0) | (1<<WGM21) | (1<<WGM20);
+   TCCR2B |= (0<<WGM22) | (0<<CS22) | (0<<CS21) | (1<<CS20);
+   TIMSK2 |= (0<<OCIE2B) | (0<<OCIE2A) | (0<<TOIE2);
+   */
 }
 
 
@@ -436,7 +469,8 @@ int main(void)
     for(;;){    /* main event loop */
         wdt_reset();
         usbPoll();
-        
+               
+
         /*    device -> host    */
         if( usbInterruptIsReady() ) {
             if( twcnt!=trcnt || sendEmptyFrame ) {
@@ -465,9 +499,12 @@ int main(void)
             if(intr3Status == 2){
                 usbSetInterrupt3(serialStateNotification, 8);
                 PORTD &= ~(1<<PD7);
+                PORTB &= ~(1<<PB3);
+                PORTD &= ~(1<<PD3);
             }else{
                 usbSetInterrupt3(serialStateNotification+8, 2);
                 PORTD |= (1<<PD7);
+                PORTB |= (1<<PB3);
             }
             intr3Status--;
         }
@@ -476,3 +513,15 @@ int main(void)
     return 0;
 }
 
+
+void ledAlternar(void){
+   if(estado_leds_alter = 1){
+      if((PORTD & (1<<PD3))){
+         PORTD &= ~(1<<PD3);
+         PORTB |= (1<<PB3);
+      }else{
+         PORTD |= (1<<PD3);
+         PORTB &= ~(1<<PB3);
+      }
+   }
+}
