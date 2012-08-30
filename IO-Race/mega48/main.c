@@ -23,15 +23,10 @@
 #define INTERRUPT_REPORT    1
 
 #define CMD_WHO     "cdc-io"
-/*
-#define IO_NAME "I/O - Race"
-char *aux_name = IO_NAME;
-*/
 
-uchar estado_leds_alter = 0;
-void ledAlternar(void);
 
-#define SEC_TO_REACTIVATE_BARRIER 3
+void openPortExecution(void);
+void closePortExecution(void);
 
 enum {
     SEND_ENCAPSULATED_COMMAND = 0,
@@ -46,7 +41,7 @@ enum {
 };
 
 
-static PROGMEM char configDescrCDC[] = {   /* USB configuration descriptor */
+static const PROGMEM char configDescrCDC[] = {   /* USB configuration descriptor */
     9,          /* sizeof(usbDescrConfig): length of descriptor in bytes */
     USBDESCR_CONFIG,    /* descriptor type */
     67,
@@ -187,7 +182,7 @@ usbRequest_t    *rq = (void *)data;
 /*---------------------------------------------------------------------------*/
 
 uchar usbFunctionRead( uchar *data, uchar len )
-{   
+{
     memcpy( data, modeBuffer, 7 );
     return 7;
 }
@@ -206,7 +201,7 @@ uchar usbFunctionWrite( uchar *data, uchar len )
 #define TBUF_SZ     256
 #define TBUF_MSK    (TBUF_SZ-1)
 
-//static uchar tos, val, val2;
+static uchar tos, val, val2;
 static uchar rcnt, twcnt, trcnt;
 static char rbuf[8], tbuf[TBUF_SZ];
 
@@ -236,37 +231,35 @@ static void out_char( uchar c )
 
 void usbFunctionWriteOut( uchar *data, uchar len )
 {
+
     /*  postpone receiving next data    */
     usbDisableAllRequests();
 
-    char c;
-    
     /*    host -> device:  request   */
-    /* Procesamiento y ejecucion de rutinas que proceden desde el host */
     do {
-                
-        c = *data++;
+        char    c;
 
+        //    delimiter?
+        c    = *data++;
         switch(c){
            case 'D': 
-                       PCICR |= (1<<PCIE1);
+                       PCICR |= (1<<PCIE1); //prendo los pin change interrupt
                        PORTB &= ~(1<<PB3);
                        PORTD |= (1<<PD3);
                        break;
 
            case 'd':
-                       PCICR &= ~(1<<PCIE1);
-                       TCCR1B = (0<<WGM13) | (1<<WGM12) | (0<<CS12) | (0<<CS11) | (0<<CS10);
+                       PCICR &= ~(1<<PCIE1); //apago los pin change interrupt
+                       TCCR1B = (0<<WGM13) | (1<<WGM12) | (0<<CS12) | (0<<CS11) | (0<<CS10); //apago el timer 1
                        PORTD &= ~(1<<PD3);
                        PORTB |= (1<<PB3);
                        break;
 
            case 'T':
-                       estado_leds_alter = 1;
                        break;
 
            case 't':
-                       estado_leds_alter = 0;
+                       //alternate_led_state = 0;
                        break;
 
            case '\n': break;
@@ -292,7 +285,7 @@ static uchar   intr_flag[4];
     ISR( TIMER1_CAPT_vect )     INTR_REG(6)
     ISR( TIMER1_COMPA_vect )    INTR_REG(7)
     ISR( TIMER1_COMPB_vect )    INTR_REG(8)
-    ISR( TIMER1_OVF_vect ){}
+    ISR( TIMER1_OVF_vect )      INTR_REG(9)
     ISR( TIMER0_OVF_vect )      INTR_REG(10)
     ISR( SPI_STC_vect )         INTR_REG(11)
     ISR( USART_RXC_vect )       INTR_REG(12)
@@ -316,10 +309,11 @@ static uchar   intr_flag[4];
 #define INTR_MIN        4
 #define INTR_MAX        26
     ISR( PCINT0_vect )          INTR_REG(4)
-    ISR( PCINT1_vect ){
+    ISR( PCINT1_vect )/*INTR_REG(5)*/{
+       //usbDisableAllRequests();  // Deshabilito las requests de las rutinas USB
        PCICR &= ~(1<<PCIE1);   // Desactivo las interrupciones por cambio de estado de pin
-       usbDisableAllRequests();  // Deshabilito las requests de las rutinas USB 
-       _delay_ms(2);  // Delay de debounce por si hay ruido
+       //usbDisableAllRequests();  // Deshabilito las requests de las rutinas USB 
+       _delay_us(5);  // Delay de debounce por si hay ruido
        if((PINC & 0x20) || (PINC & 0x40)){  // Verifico que el estado del pin despues del debounce
           out_char('L');  // Si efectivamente salto la interrupcion, mando caracter 'L'
           TCNT1 = 0;  // Reinicio el contador del Timer1 antes de activarlo 
@@ -327,23 +321,24 @@ static uchar   intr_flag[4];
        }else{
           PCICR |= (1<<PCIE1);  // si el estado del pin no era bajo fue ruido reactivo la interrupcion de pin
        }
-       usbEnableAllRequests(); // Reactivo las requests de USB
+       //usbEnableAllRequests(); // Reactivo las requests de USB
     }
     ISR( PCINT2_vect )          INTR_REG(6)
     ISR( WDT_vect )             INTR_REG(7)
-    ISR( TIMER2_COMPA_vect )    INTR_REG(8)
+    ISR( TIMER2_COMPA_vect ){}
     ISR( TIMER2_COMPB_vect )    INTR_REG(9)
     ISR( TIMER2_OVF_vect )      INTR_REG(10)
     ISR( TIMER1_CAPT_vect )     INTR_REG(11)
     ISR( TIMER1_COMPA_vect ){
-       usbDisableAllRequests();  // Deshabilito las requests de las rutinas USB
+       //usbDisableAllRequests();  // Deshabilito las requests de las rutinas USB
        PCIFR |= (1<<PCIF1);  // Seteo el Flag de interrupcion a 1
        PCICR |= (1<<PCIE1);  // Activo las interrupciones por cambio de estado de pin
        TCCR1B = (0<<WGM13) | (1<<WGM12) | (0<<CS12) | (0<<CS11) | (0<<CS10);  // Apagpo el Timer1
-       usbEnableAllRequests();  // Reactivo las requests USB
+       //usbEnableAllRequests();  // Reactivo las requests USB
+    
     }
     ISR( TIMER1_COMPB_vect )    INTR_REG(13)
-    ISR( TIMER1_OVF_vect )	INTR_REG(14)
+    ISR( TIMER1_OVF_vect )      INTR_REG(14)
     ISR( TIMER0_COMPA_vect )    INTR_REG(15)
     ISR( TIMER0_COMPB_vect )    INTR_REG(16)
     ISR( TIMER0_OVF_vect )      INTR_REG(17)
@@ -385,7 +380,7 @@ uchar    i, j;
 static void hardwareInit(void)
 {
 uchar    i;
-    
+
     /* activate pull-ups except on USB lines */
     USB_CFG_IOPORT   = (uchar)~((1<<USB_CFG_DMINUS_BIT)|(1<<USB_CFG_DPLUS_BIT));
     /* all pins input except USB (-> USB reset) */
@@ -393,38 +388,37 @@ uchar    i;
     USBDDR    = 0;    /* we do RESET by deactivating pullup */
     usbDeviceDisconnect();
 #else
-    PORTD &= ~(1<<PD7);//added by me
-    USBDDR    = (1<<USB_CFG_DMINUS_BIT)|(1<<USB_CFG_DPLUS_BIT)|(1<<PD7);//added by me
+    USBDDR    = (1<<USB_CFG_DMINUS_BIT)|(1<<USB_CFG_DPLUS_BIT);
 #endif
-    
+
     for(i=0;i<20;i++){  /* 300 ms disconnect */
         wdt_reset();
-        _delay_ms(15);
+            _delay_ms(15);
     }
 
 #ifdef USB_CFG_PULLUP_IOPORT
     usbDeviceConnect();
 #else
-    USBDDR    = 0 | (1<<PD7); //added by me    /*  remove USB reset condition */
+    USBDDR    = 0 | (1<<PD7);      /*  remove USB reset condition e inicializacion del LED azul*/
 #endif
 
 /*
   Inicializacion de las cosas de la barrera
-*/    
+*/   
 
 #define TOP 52
-
-
+   
+   PORTD &= ~(1<<PD7);
    DDRD |= (1<<PD5);
    TCCR0A |= (0<<COM0A1) | (0<<COM0A0) | (1<<COM0B1) | (1<<COM0B0) | (1<<WGM01) | (1<<WGM00);
-   TCCR0B |= (1<<WGM02) | (0<<CS02) | (1<<CS01) | (0<<CS00);
+   TCCR0B |= (1<<WGM02); //| (0<<CS02) | (1<<CS01) | (0<<CS00);
    OCR0A = TOP;
    OCR0B = TOP/2;
+
 
    /* Inicializacion de los pines utilizados para los leds de colore rojo y verde */
    DDRB |= (1<<PB3);  // Led's Rojo
    DDRD |= (1<<PD3);  // Led's Verde
-
 
    /* Inicializacion de los pines de interrupcion de largada */  
    DDRC |= (0<<PC5) | (0<<PC4);
@@ -439,13 +433,6 @@ uchar    i;
 
    PORTD &= ~(1<<PD3); // Apagado de la luz verde
 
-
-   /* Inicializacion del timer 2 */
-   /*
-   TCCR2A |= (0<<COM2A1) | (0<<COM2A0) | (0<<COM2B1) | (0<<COM2B0) | (1<<WGM21) | (1<<WGM20);
-   TCCR2B |= (0<<WGM22) | (0<<CS22) | (0<<CS21) | (1<<CS20);
-   TIMSK2 |= (0<<OCIE2B) | (0<<OCIE2A) | (0<<TOIE2);
-   */
 }
 
 
@@ -459,7 +446,6 @@ int main(void)
 
     intr3Status = 0;
     sendEmptyFrame  = 0;
-   
 
     rcnt    = 0;
     twcnt   = 0;
@@ -469,7 +455,6 @@ int main(void)
     for(;;){    /* main event loop */
         wdt_reset();
         usbPoll();
-               
 
         /*    device -> host    */
         if( usbInterruptIsReady() ) {
@@ -498,13 +483,10 @@ int main(void)
 
             if(intr3Status == 2){
                 usbSetInterrupt3(serialStateNotification, 8);
-                PORTD &= ~(1<<PD7);
-                PORTB &= ~(1<<PB3);
-                PORTD &= ~(1<<PD3);
+                closePortExecution();
             }else{
                 usbSetInterrupt3(serialStateNotification+8, 2);
-                PORTD |= (1<<PD7);
-                PORTB |= (1<<PB3);
+                openPortExecution();
             }
             intr3Status--;
         }
@@ -513,15 +495,21 @@ int main(void)
     return 0;
 }
 
+void openPortExecution(void){
+   PORTB |= (1<<PB3);
+   PORTD &= ~(1<<PD3);
+   TCCR0B |= (0<<CS02) | (1<<CS01) | (0<<CS00);
+   PORTD |= (1<<PD7);
 
-void ledAlternar(void){
-   if(estado_leds_alter = 1){
-      if((PORTD & (1<<PD3))){
-         PORTD &= ~(1<<PD3);
-         PORTB |= (1<<PB3);
-      }else{
-         PORTD |= (1<<PD3);
-         PORTB &= ~(1<<PB3);
-      }
-   }
 }
+
+void closePortExecution(void){
+   PORTB &= ~(1<<PB3);
+   PORTD &= ~(1<<PD3);
+   TCCR0B &= ~((0<<CS02) | (1<<CS01) | (0<<CS00));
+   PORTD &= ~(1<<PD7);
+   PCICR &= ~(1<<PCIE1); //apago los pin change interrupt
+   TCCR1B = (0<<WGM13) | (1<<WGM12) | (0<<CS12) | (0<<CS11) | (0<<CS10); //apago el timer 1
+
+}
+
