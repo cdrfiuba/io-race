@@ -407,7 +407,16 @@ uchar    i;
 */   
 
 #define TOP 52
-   
+   /* USAR MODO CLEAR TIMER ON COMPARE MATCH (CTC) EN OUTPUT B
+	TCCR0A/B:
+	Compare match output A mode: Normal -> 2b'00
+	Compare match output B mode: Toggle OC0B on compare match -> COM0B1/0=2b'01
+	Waveform generation mode: CTC -> WGM02:0=3b'010
+	Clock Source????
+	TIMSK0:
+	OCIE0B: Timer/counter output compare match B interrupt enable=1'b1
+   */
+	
    PORTD &= ~(1<<PD7);
    DDRD |= (1<<PD5);
    TCCR0A |= (0<<COM0A1) | (0<<COM0A0) | (1<<COM0B1) | (1<<COM0B0) | (1<<WGM01) | (1<<WGM00);
