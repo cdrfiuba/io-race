@@ -51,7 +51,6 @@ boolean crossed_barrier()
     //Cuando un auto pase la barrera
     if (sensor1_in == SENSOR_BLOCKED || sensor2_in == SENSOR_BLOCKED) 
     {
-      Serial.write('L');
       digitalWrite(led_b, HIGH);
       blocked = 0;
       crossed=true;
@@ -81,7 +80,10 @@ void race()
   {
     departure = crossed_barrier();
     if (departure == true)
+    {
+      Serial.write('L');
       state = STOP;
+    }
   }
 }
 
@@ -90,12 +92,12 @@ void loop()
 {
   sensor1_in = digitalRead(sensor_1);
   sensor2_in = digitalRead(sensor_2);
-  unsigned char serial_command = Serial.read();
+  serial_command = Serial.read();
   
   switch(serial_command)
   {
     case 'D':
-      state = READY;
+      state = RACE;
       break;
     case 'd':
       state = STOP;
@@ -104,7 +106,6 @@ void loop()
         state = RACE;
       break;
     default:
-      state = STOP;
       break;
   }
 
