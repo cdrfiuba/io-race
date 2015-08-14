@@ -28,7 +28,8 @@ const int led_g = 3;
 const int led_b = 7;
 const int tone_out = 5;
 
-const int AWAITING_TIME_TO_BLOCK = 850; //Tiempo para bloquear los sensores
+const int GATEWAY_BLOCKING_TIME = 3000;
+const int AWAITING_TIME_TO_BLOCK = 20; //Tiempo para bloquear los sensores
 const boolean finish_vector[6]={HIGH,HIGH,LOW,HIGH,LOW,HIGH};//Motivos de colores para el fin de carrera 
 
 //Variables globales para el control de la barrera
@@ -72,6 +73,7 @@ boolean lap_counter()
       digitalWrite(led_b, HIGH); delay(100);
       blocked = false;
       lap++;
+      delay(GATEWAY_BLOCKING_TIME);
     } 
     else
       digitalWrite(led_b, LOW);
