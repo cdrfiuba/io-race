@@ -18,6 +18,7 @@
 #define SENSOR_BLOCKED HIGH
 #define SENSOR_CLEAR LOW
 #define FINISH_COLORS true
+#define FINAL_LAP 2
 
 typedef enum{STOP,READY}state_t;
 
@@ -73,7 +74,8 @@ boolean lap_counter()
       digitalWrite(led_b, HIGH); delay(100);
       blocked = false;
       lap++;
-      delay(GATEWAY_BLOCKING_TIME);
+      if(lap != FINAL_LAP)
+        delay(GATEWAY_BLOCKING_TIME);
     } 
     else
       digitalWrite(led_b, LOW);
