@@ -1,7 +1,7 @@
 /***********************************************************************
 *                                                                      *
 * ArduRace is a simple driver for a starting line gateway made with    *
-* arduino. Copyright (C) 2015 Patricio Tula.                           *
+* arduino. Copyright (C) 2015 Patricio Tula and Lucas Chiesa.          *
 * This program is free software: you can redistribute it and/or modify *
 * it under the terms of the GNU General Public License as published by *
 * the Free Software Foundation, either version 3 of the License, or    *
@@ -28,8 +28,7 @@ const int led_g = 3;
 const int led_b = 7;
 const int tone_out = 5;
 
-const int DEBOUNCE_TIME = 20; //Tiempo para hacer debounce
-const int DEPARTURE_AWAITING_TIME = 2000; //Tiempo de espera para que pase el segundo Autito
+const int AWAITING_TIME_TO_BLOCK = 850; //Tiempo para bloquear los sensores
 const boolean finish_vector[6]={HIGH,HIGH,LOW,HIGH,LOW,HIGH};//Motivos de colores para el fin de carrera 
 
 //Variables globales para el control de la barrera
@@ -38,8 +37,8 @@ int sensor2_in;
 unsigned long time;
 unsigned char serial_command;
 state_t state;
-boolean departure, blocked;
-
+boolean blocked;
+unsigned int lap;
 
 void setup() {
   pinMode(sensor_1, INPUT);
@@ -58,60 +57,44 @@ void setup() {
   tone(tone_out, 38000);
   time = 0;
   blocked = false;
-  departure=true;
+  lap=0;
 }
 
-boolean crossed_barrier()
+boolean lap_counter()
 {
-  boolean crossed = false;
   if ((sensor1_in == SENSOR_BLOCKED || sensor2_in == SENSOR_BLOCKED) && time == 0 && blocked == false) 
     time = millis();  
-  if (time != 0 && (millis() - time) > DEBOUNCE_TIME) 
+  if (time != 0 && (millis() - time) > AWAITING_TIME_TO_BLOCK) 
   {
-    //Cuando un auto pase la barrera
     if (sensor1_in == SENSOR_BLOCKED || sensor2_in == SENSOR_BLOCKED) 
     {
-      digitalWrite(led_b, HIGH);
+      Serial.write('L');
+      digitalWrite(led_b, HIGH); delay(100);
       blocked = false;
-      crossed=true;
+      lap++;
     } 
     else
       digitalWrite(led_b, LOW);
     time = 0;
   }
-  return crossed; 
 }
 
 void race()
 { 
-  if(departure == true)//Primer vuelta
+  lap_counter();
+  if (lap == 2)
   {
-    departure = (crossed_barrier()==true) ? false:true;
-    if (departure == false)//Delay en espera a pase el segundo autito
-    {
-      digitalWrite(led_b, HIGH);
-      delay(DEPARTURE_AWAITING_TIME);
-      digitalWrite(led_b, LOW);
-    }
-  }
-  else//Segunda vuelta
-  {
-    departure = crossed_barrier();
-    if (departure == true)
-    {
-      Serial.write('L');
-      state = STOP;
-
+    state = STOP;
+    
 #if FINISH_COLORS
-      for(int i=0; i < 13; i++ )
-      {
-        digitalWrite(led_r, finish_vector[i%6]);
-        digitalWrite(led_g, finish_vector[(i+1)%6]);
-        delay(100);
-      }
-#endif
-
+    for(int i=0; i < 20; i++ )
+    {
+      digitalWrite(led_r, finish_vector[i%6]);
+      digitalWrite(led_g, finish_vector[(i+1)%6]);
+      delay(90);
     }
+#endif
+  
   }
 }
 
@@ -138,7 +121,7 @@ void loop()
     digitalWrite(led_r, HIGH);
     digitalWrite(led_g, LOW);
     digitalWrite(led_b, LOW);
-    departure=true;
+    lap = 0;
   }
   else
     if(state == READY)
